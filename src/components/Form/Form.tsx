@@ -1,10 +1,11 @@
-import { Button, SelectBox, TextBox } from 'devextreme-react';
+import { Button, LoadPanel, SelectBox, TextBox } from 'devextreme-react';
 import './style.css';
 import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import axios from 'axios';
 import { URLCustonAction, configGetInitialMonthList, configGetYearList, configSaveMaster, getConfigFields, getHeaders, getUserToken } from '../../config/Config';
 import { INumberBoxOptions } from 'devextreme-react/number-box';
+import notify from 'devextreme/ui/notify';
 
 
 export function Form() {
@@ -14,10 +15,14 @@ export function Form() {
     const [listMonth, setListMonth] = useState<any>([])
     const [listCompanies, setListCompanies] = useState<any>([])
 
+    const [selectedCompany, setSelectedCompany] = useState<number>(0)
     const [selectedInitialYear, setSelectedInitialYear] = useState<number>(0)
     const [selectedInitialMonth, setSelectedInitialMonth] = useState<number>(0)
     const [selectedFinalYear, setSelectedFinalYear] = useState<number>(0)
     const [selectedFinalMonth, setSelectedFinalMonth] = useState<number>(0)
+
+    const type = [{ valor: 'C', descricao: 'Com Valor' }, { valor: 'S', descricao: 'Sem Valor' }]
+    const [isLoadApi, setIsLoadApi] = useState(false)
 
     useEffect(() => {
         token && listMonth.length === 0 && getCompanies()
@@ -48,53 +53,97 @@ export function Form() {
                 console.log(error);
             });
     }
-    
+
     function getCompanies() {
+        setIsLoadApi(true)
         axios.post(URLCustonAction, {}, getHeaders(token))
-          .then((res: any) => {
-            console.log(res.data)
-            setListCompanies(res.data)
-          })
-          .catch((err: any) => { console.log(err) })
-      }
+            .then((res: any) => {
+                console.log("getCompanies",res.data)
+                setListCompanies(res.data)
+            })
+            .catch((err: any) => { console.log(err) })
+            .finally(() => setIsLoadApi(false))
+    }
     function getUserInfo() {
         setUserId(getUserToken(token).sub)
-      }
+    }
 
-    function handleInitialMonth(e: React.PropsWithChildren<INumberBoxOptions>){
-        setSelectedInitialMonth(e.value||0)
+    function handleCompany(e: React.PropsWithChildren<INumberBoxOptions>) {
+        setSelectedCompany(e.value || 0)
     }
-    function handleFinalMonth(e: React.PropsWithChildren<INumberBoxOptions>){
-        setSelectedFinalMonth(e.value||0)
+    function handleInitialMonth(e: React.PropsWithChildren<INumberBoxOptions>) {
+        setSelectedInitialMonth(e.value || 0)
     }
-    function handleInitialYear(e: React.PropsWithChildren<INumberBoxOptions>){
-        setSelectedInitialYear(e.value||0)
+    function handleFinalMonth(e: React.PropsWithChildren<INumberBoxOptions>) {
+        setSelectedFinalMonth(e.value || 0)
     }
-    function handleFinalYear(e: React.PropsWithChildren<INumberBoxOptions>){
-        setSelectedFinalYear(e.value||0)
+    function handleInitialYear(e: React.PropsWithChildren<INumberBoxOptions>) {
+        setSelectedInitialYear(e.value || 0)
+    }
+    function handleFinalYear(e: React.PropsWithChildren<INumberBoxOptions>) {
+        setSelectedFinalYear(e.value || 0)
     }
 
     async function saveForm() {
         try {
-            const response1 = await axios.request(configSaveMaster(selectedFinalYear,selectedInitialYear,selectedFinalMonth,selectedInitialMonth,userId,token))
+            setIsLoadApi(true)
+            const response1 = await axios.request(configSaveMaster(selectedCompany, selectedFinalYear, selectedInitialYear, selectedFinalMonth, selectedInitialMonth, userId, token))
             console.log("==========================", response1)
+            if (response1.status === 200) {
+                notify("Enviado com sucesso!", "success", 6000)
+            }
         } catch (error) {
+            notify("Enviado com sucesso!", "error", 6000)
             console.error(error);
-        } 
+        } finally {
+            setIsLoadApi(false)
+        }
     };
 
     return (
         <section>
             <h1>Gerar - Relatorio de Estoque e Vendas</h1>
-            <article>
-                <SelectBox label='Empresa' dataSource={listCompanies}  displayExpr="descricao" valueExpr= "formulario"/>
-                <SelectBox label='Tipo de dado' />
-                <SelectBox label='Mês inicial' dataSource={listMonth} displayExpr={'DESCRICAO'} valueExpr='MES' value={selectedInitialMonth} onValueChanged={handleInitialMonth}/>
-                <SelectBox label='Mês final' dataSource={listMonth} displayExpr={'DESCRICAO'} valueExpr='MES'value={selectedFinalMonth} onValueChanged={handleFinalMonth}/>
-                <SelectBox label='Ano inicial' dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO'value={selectedInitialYear} onValueChanged={handleInitialYear}/>
-                <SelectBox label='Ano final' dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO'value={selectedFinalYear} onValueChanged={handleFinalYear}/>
-                <Button text='Gerar relatorio e enviar por email' onClick={saveForm}/>
+            <article >
+                <div className='group-fields'>
+                    <div className='field-flex'>
+                        <span>Tipo de mapa</span>
+                        <SelectBox dataSource={listCompanies.length > 0 && listCompanies.filter((company: any) => company.descricao.toString().toLowerCase().includes("gerar"))}
+                            displayExpr="descricao" valueExpr="formulario" width={"100%"} onValueChanged={handleCompany} value={selectedCompany} />
+                    </div>
+                    {/* <div className='field-flex'>
+                        <span>Tipo de dado</span>
+                        <SelectBox dataSource={type} displayExpr="descricao" valueExpr="valor" width={"100%"} />
+                    </div> */}
+                </div>
+                <div className='flex'>
+                    <div className='field-column'>
+                        <span>Mês inicial</span>
+                        <SelectBox dataSource={listMonth} displayExpr={'DESCRICAO'} valueExpr='MES' value={selectedInitialMonth} onValueChanged={handleInitialMonth} />
+                    </div>
+                    <div className='field-column'>
+                        <span>Mês final</span>
+                        <SelectBox dataSource={listMonth} displayExpr={'DESCRICAO'} valueExpr='MES' value={selectedFinalMonth} onValueChanged={handleFinalMonth} />
+                    </div>
+                    <div className='field-column'>
+                        <span>Ano inicial</span>
+                        <SelectBox dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO' value={selectedInitialYear} onValueChanged={handleInitialYear} />
+                    </div>
+                    <div className='field-column'>
+                        <span>Ano final</span>
+                        <SelectBox dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO' value={selectedFinalYear} onValueChanged={handleFinalYear} />
+                    </div>
+                    <div className='field-column'>
+                        <Button text='Gerar relatorio e enviar por email' onClick={saveForm} stylingMode='contained' type='default'  />
+                    </div>
+                </div>
             </article>
+            <LoadPanel
+                shadingColor="rgba(0,0,0,0.1)"
+                visible={isLoadApi}
+                showIndicator={true}
+                shading={true}
+                showPane={true}
+            />
         </section>
 
     )

@@ -35,7 +35,7 @@ const generateFormId = 43144
 //     return getConfigFields(token, data,`${URLBASE}/FieldRemoteOperation(fieldId=${purchaseNumberFieldId},operation=Validation)`);
 // }
 
-export function configSaveMaster(finalYear: number, initialYear: number, finalMonth: number, initialMonth: number, userId: number, token: string) {
+export function configSaveMaster(selectedCompany:number, finalYear: number, initialYear: number, finalMonth: number, initialMonth: number, userId: number, token: string) {
     let data = {
         'ANO_FINAL': finalYear,
         'ANO_INICIAL': initialYear,
@@ -43,7 +43,7 @@ export function configSaveMaster(finalYear: number, initialYear: number, finalMo
         'MES_INICIAL': initialMonth,
         'USUARIO_CRIADOR_REGISTRO': userId
     };
-    return getConfigFields(token, data,`${URLBASE}/SaveRecord(formId=${masterFormId})`);
+    return getConfigFields(token, data,`${URLBASE}/SaveRecord(formId=${selectedCompany})`);
 }
 
 // export function configSaveDetail(date: string, idSugestion: number, token: string) {
