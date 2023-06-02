@@ -58,8 +58,10 @@ export function Form() {
         setIsLoadApi(true)
         axios.post(URLCustonAction, {}, getHeaders(token))
             .then((res: any) => {
-                console.log("getCompanies",res.data)
+                console.log("getCompanies", res.data)
                 setListCompanies(res.data)
+                // if(res.data.length === 1) 
+                    setSelectedCompany(res.data[0].formulario)
             })
             .catch((err: any) => { console.log(err) })
             .finally(() => setIsLoadApi(false))
@@ -104,17 +106,7 @@ export function Form() {
         <section>
             <h1>Gerar - Relatorio de Estoque e Vendas</h1>
             <article >
-                <div className='group-fields'>
-                    <div className='field-flex'>
-                        <span>Tipo de mapa</span>
-                        <SelectBox dataSource={listCompanies.length > 0 && listCompanies.filter((company: any) => company.descricao.toString().toLowerCase().includes("gerar"))}
-                            displayExpr="descricao" valueExpr="formulario" width={"100%"} onValueChanged={handleCompany} value={selectedCompany} />
-                    </div>
-                    {/* <div className='field-flex'>
-                        <span>Tipo de dado</span>
-                        <SelectBox dataSource={type} displayExpr="descricao" valueExpr="valor" width={"100%"} />
-                    </div> */}
-                </div>
+
                 <div className='flex'>
                     <div className='field-column'>
                         <span>Mês inicial</span>
@@ -133,7 +125,7 @@ export function Form() {
                         <SelectBox dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO' value={selectedFinalYear} onValueChanged={handleFinalYear} />
                     </div>
                     <div className='field-column'>
-                        <Button text='Gerar relatorio e enviar por email' onClick={saveForm} stylingMode='contained' type='default'  />
+                        <Button text='Gerar relatorio e enviar por email' onClick={saveForm} stylingMode='contained' type='default' />
                     </div>
                 </div>
             </article>

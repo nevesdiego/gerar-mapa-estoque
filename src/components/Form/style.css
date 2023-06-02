@@ -12,14 +12,15 @@
 .field-flex>span{
     margin: auto 0;
     padding-right: 10px;
+    min-width: 100px;
 
 }
-.field-flex:nth-child(2) >span{
+/* .field-flex:nth-child(2) >span{
     margin: auto 0;
     min-width: 100px;
     padding-right: 10px;
 
-}
+} */
 
 /* .field-flex:nth-child(1) {
     width: 60%;

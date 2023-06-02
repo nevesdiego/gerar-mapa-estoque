@@ -3,37 +3,7 @@ import qs from "qs"
 const URLBASE = "https://newapi.cosmospro.com.br/api/Forms"
 export const URLCustonAction = "https://portal.cosmospro.com.br:9191/api/ExecuteCustomAction/ExecuteAction?ActionName=Formularios_Mapa_Estoque"
 
-const masterFormId = 43143
-const generateFormId = 43144
 
-// export function configOnFocusOutNF(nfeKey: string, token: string) {
-//     let data = {
-//         "AGENDAMENTOS_STATUS": 7,
-//         'CHAVE_NFE': nfeKey
-//     };
-//     return  getConfigFields(token, data,`${URLBASE}/FieldRemoteOperation(fieldId=${nfeKeyFieldId},operation=Execution)`);
-// }
-
-// export function configAsyncValidationNF(nfeKey: string, token: string) {
-
-//     let data = {
-//         "AGENDAMENTOS_STATUS": 7,
-//         'CHAVE_NFE': nfeKey
-//     };
-//     return getConfigFields(token, data,`${URLBASE}/FieldRemoteOperation(fieldId=${nfeKeyFieldId},operation=Validation)`);
-// }
-
-// export function configAsyncValidationPC(nfeKey: string, orderNumber: number, purchaseNumber: number, issueNf: string, volume: number, token: string) {
-//     let data = {
-//         "AGENDAMENTOS_STATUS": 7,
-//         'CHAVE_NFE': nfeKey,
-//         'NUMERO_NOTA': orderNumber,
-//         'VOLUMES': volume,
-//         'DATA_EMISSAO_NF': issueNf,
-//         'PEDIDO_COMPRA': purchaseNumber,
-//     };
-//     return getConfigFields(token, data,`${URLBASE}/FieldRemoteOperation(fieldId=${purchaseNumberFieldId},operation=Validation)`);
-// }
 
 export function configSaveMaster(selectedCompany:number, finalYear: number, initialYear: number, finalMonth: number, initialMonth: number, userId: number, token: string) {
     let data = {
@@ -46,35 +16,6 @@ export function configSaveMaster(selectedCompany:number, finalYear: number, init
     return getConfigFields(token, data,`${URLBASE}/SaveRecord(formId=${selectedCompany})`);
 }
 
-// export function configSaveDetail(date: string, idSugestion: number, token: string) {
-//     let data = {
-//         "data_agenda": date,
-//     };
-//     return getConfigFields(token, data,`${URLBASE}/SaveRecord(formId=${detailFormId},referencedId=${idSugestion})`);
-// }
-
-// export function configGetDetailList(token:string,scheduleId:number){
-//     let data = qs.stringify({
-//         'requireTotalCount': 'true',
-//         'sort': '[{"selector":"DATA_HORA","desc":true}]',
-//         'select': '["AGENDAMENTO_NF", "USUARIO_LOGADO", "USUARIO_LOGADO_lookupOptimizationValue", "DATA_HORA", "data_agenda", "MOVIMENTO", "REAGENDADO", "DOCA", "HORA", "STATUS_AGENDAMENTO", "DATA_HORA_ENVIO"]',
-//         'entityId': detailFormId,
-//         'executionParameters': '[]',
-//         referencedId: scheduleId,
-//     });
-//     return configGet(token,data)
-// }
-
-// export function configGetStatusList(token:string){
-//     let data = qs.stringify({
-//         requireTotalCount: true,
-//         sort: [{ "selector": "AGENDAMENTO_RECEBIMENTO_STATUS", "desc": true }],
-//         select: ["AGENDAMENTO_RECEBIMENTO_STATUS", "USUARIO_LOGADO", "USUARIO_LOGADO_lookupOptimizationValue", "DATA_HORA", "DESCRICAO"],
-//         entityId: statusFormId,
-//         executionParameters: '[]'
-//     });
-//     return configGet(token,data)
-// }
 
 export function configGetInitialMonthList(token:string){
     let data = qs.stringify({
