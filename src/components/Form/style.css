@@ -61,6 +61,16 @@ h1 {
     color: #E50043;
 }
 
+.menu-btn{
+    display: flex;
+    align-items: center;
+}
+.menu-icon{
+    font-size: 30px !important;
+    margin-right: 10px;
+    color: #E50043;
+}
+
 @media screen and (max-width: 768px) {
     .group-fields {
         display: flex;

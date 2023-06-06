@@ -104,7 +104,10 @@ export function Form() {
 
     return (
         <section>
-            <h1>Gerar - Relatorio de Estoque e Vendas</h1>
+            <div className='menu-btn'>
+                <i className="dx-icon-file menu-icon"></i>
+                <h1>Gerar - Relatorio de Estoque e Vendas</h1>
+            </div>
             <article >
 
                 <div className='flex'>
@@ -125,7 +128,7 @@ export function Form() {
                         <SelectBox dataSource={listYears} displayExpr={'ANO'} valueExpr='ANO' value={selectedFinalYear} onValueChanged={handleFinalYear} />
                     </div>
                     <div className='field-column'>
-                        <Button text='Gerar relatorio e enviar por email' onClick={saveForm} stylingMode='contained' type='default' />
+                        <Button text='Gerar relatorio e enviar por email' onClick={saveForm} stylingMode='contained' type='default' icon='check' />
                     </div>
                 </div>
             </article>
