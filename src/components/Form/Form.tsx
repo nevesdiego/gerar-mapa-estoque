@@ -60,8 +60,7 @@ export function Form() {
             .then((res: any) => {
                 console.log("getCompanies", res.data)
                 setListCompanies(res.data)
-                // if(res.data.length === 1) 
-                    setSelectedCompany(res.data[0].formulario)
+                    setSelectedCompany(res.data.filter((type:any)=>type.descricao.includes("Gerar"))[0].formulario)
             })
             .catch((err: any) => { console.log(err) })
             .finally(() => setIsLoadApi(false))
